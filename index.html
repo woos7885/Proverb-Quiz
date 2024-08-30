@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Proverb Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #quiz-container {
+            width: 80%;
+            max-width: 600px;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        #question-number {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        #question {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            background-color: #e0e0e0;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #d0d0d0;
+        }
+        #result {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        .result-icon {
+            font-size: 50px;
+            margin-top: 10px;
+        }
+        .green {
+            color: green;
+        }
+        .red {
+            color: red;
+        }
+        #final-message {
+            font-size: 24px;
+            color: #ff69b4;
+            animation: heartbeat 2s infinite;
+            opacity: 0.5;
+        }
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="quiz-container">
+        <div id="question-number">문제가 50개 남았습니다</div>
+        <div id="question">What does "A stitch in time saves nine" mean?</div>
+        <div class="option" onclick="checkAnswer(0)">1. A small mistake can lead to bigger problems.</div>
+        <div class="option" onclick="checkAnswer(1)">2. It’s never too late to fix something.</div>
+        <div class="option" onclick="checkAnswer(2)">3. Early action prevents larger problems.</div>
+        <div class="option" onclick="checkAnswer(3)">4. Hard work pays off in the end.</div>
+        <div class="option" onclick="checkAnswer(4)">5. Patience is a virtue.</div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: 'What does "A stitch in time saves nine" mean?',
+                options: [
+                    'A small mistake can lead to bigger problems.',
+                    'It’s never too late to fix something.',
+                    'Early action prevents larger problems.',
+                    'Hard work pays off in the end.',
+                    'Patience is a virtue.'
+                ],
+                answer: 2
+            },
+            // 49 more questions like the above structure
+        ];
+
+        let currentQuestionIndex = 0;
+        const totalQuestions = questions.length;
+
+        function loadQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            document.getElementById('question-number').innerText = `문제가 ${totalQuestions - currentQuestionIndex}개 남았습니다`;
+            document.getElementById('question').innerText = currentQuestion.question;
+            const options = document.getElementsByClassName('option');
+            for (let i = 0; i < options.length; i++) {
+                options[i].innerText = `${i + 1}. ${currentQuestion.options[i]}`;
+            }
+            document.getElementById('result').innerText = '';
+        }
+
+        function checkAnswer(selectedOption) {
+            const currentQuestion = questions[currentQuestionIndex];
+            const resultElement = document.getElementById('result');
+            if (selectedOption === currentQuestion.answer) {
+                resultElement.innerHTML = '<div class="green result-icon">⭕</div><div>정답입니다!</div>';
+                currentQuestionIndex++;
+                if (currentQuestionIndex < totalQuestions) {
+                    setTimeout(loadQuestion, 2000);
+                } else {
+                    showFinalMessage();
+                }
+            } else {
+                resultElement.innerHTML = '<div class="red result-icon">❌</div><div>오답입니다!</div>';
+                setTimeout(() => {
+                    const randomMessage = Math.random() < 0.5 ? '안타깝군요!' : '이런!';
+                    resultElement.innerHTML = `<div class="red">${randomMessage}</div>`;
+                }, 2000);
+                setTimeout(loadQuestion, 4000);
+            }
+        }
+
+        function showFinalMessage() {
+            document.getElementById('quiz-container').innerHTML = '<div id="final-message">당신은 대단한 끈기가 있군요</div>';
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
